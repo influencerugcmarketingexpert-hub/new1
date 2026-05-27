@@ -1,0 +1,40 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Build the complete premium announcement bar section (sections/custom.liquid) with all 18 premium features: multiple display modes (slider/fade/marquee), countdown timer, dismiss with sessionStorage, per-message links and icons, full color/gradient/typography customization, auto-rotate with hover pause, mobile visibility toggle, navigation arrows, dot indicators, and complete Shopify Theme Editor integration.",
+  "status": "completed",
+  "steps": [
+    "Completely rewrite sections/custom.liquid with the full premium announcement bar implementation",
+    "HTML structure: wrapper with data attributes, inner container with arrows, slider/fade/marquee content area, close button, dots, countdown timer",
+    "Block type 'message' with settings: text (text field), link (url field optional), icon (select with emoji/icon options)",
+    "Section settings organized by headers: Display Mode (select: slider/fade/marquee), Colors (bg color, text color, arrow color, gradient toggle + gradient color 2 + direction select), Bar Size (height range 32-60 step 2 default 44), Typography (font size 10-18 step 1 default 13, weight select, transform select, letter spacing 0-20 step 1 default 0), Rotation (auto-rotate checkbox, speed 2-10 step 1 default 5), Controls (arrows checkbox, dots checkbox, close button checkbox), Countdown (enable checkbox, end_date text, expired_message text), Mobile (hide_on_mobile checkbox), Marquee (marquee_speed range)",
+    "Scoped CSS using #sab-{{ section.id }} with CSS custom properties, responsive design at 749px breakpoint, @media (prefers-reduced-motion) support, gradient background support, marquee keyframes animation, slide/fade transition modes",
+    "Inline IIFE JavaScript handling: display mode switching (slider=translateY, fade=opacity, marquee=CSS animation), auto-rotation with setInterval, hover pause, arrow/dot navigation, close button with sessionStorage, countdown timer (parse date, calculate remaining, update DOM every second, show expired message), Shopify editor events (shopify:section:load, shopify:block:select, shopify:block:deselect), keyboard accessibility (arrow keys), window resize recalculation",
+    "Schema with tag:section, class:sab-section, presets with 3 default messages, blocks limit 10",
+    "All range settings must satisfy (max-min)/step <= 100 and default = min + (N * step)",
+    "Every block root element must include {{ block.shopify_attributes }}"
+  ],
+  "acceptance_criteria": [
+    "sections/custom.liquid contains a complete premium announcement bar with HTML, scoped CSS, inline JS, and valid JSON schema",
+    "Schema has display_mode select with slider/fade/marquee options",
+    "Schema has countdown timer settings (enable, end_date, expired_message)",
+    "Schema has gradient settings (enable, second color, direction)",
+    "Schema has marquee_speed range setting",
+    "Schema has hide_on_mobile checkbox",
+    "Block type message has text, link, and icon settings",
+    "All range settings pass validation: (max-min)/step <= 100, default on step grid",
+    "JS handles all three display modes with proper transitions",
+    "JS handles countdown timer with live updating",
+    "JS handles sessionStorage dismiss",
+    "JS handles Shopify editor events",
+    "CSS includes @media (prefers-reduced-motion) rules",
+    "CSS includes responsive styles at 749px",
+    "Presets array is present for Theme Customizer 'Add section'"
+  ],
+  "verification": [
+    "Run: python3 -c \"import json; f=open('/projects/sandbox/new1/sections/custom.liquid','r'); content=f.read(); schema_start=content.index('{%- schema -%}' if '{%- schema -%}' in content else '{% schema %}'); schema_end=content.index('{%- endschema -%}' if '{%- endschema -%}' in content else '{% endschema %}'); json.loads(content[schema_start+len('{% schema %}'):schema_end]); print('Schema JSON valid')\"",
+    "Verify the file contains all key features by checking for: display_mode, countdown, marquee, gradient, hide_on_mobile, sessionStorage, shopify:block:select, prefers-reduced-motion, block.shopify_attributes"
+  ],
+  "blocked_reason": null,
+  "findings": "All 18 premium features implemented in a single sections/custom.liquid file. Schema JSON validated. All range settings pass (max-min)/step <= 100 and default on step grid. Icons are rendered inline as SVGs (no snippet needed since requirement says no external files). The file uses the existing structure as base (arrows, dots, close button, sessionStorage dismiss) and adds display modes, countdown, icons, gradient, mobile toggle, and marquee. Letter spacing default changed from 8 to 0 per spec."
+}

@@ -1,0 +1,975 @@
+{%- if section.blocks.size > 0 -%}
+  {%- assign dismissed_key = 'sab-dismissed-' | append: section.id -%}
+  {%- assign display_mode = section.settings.display_mode -%}
+  <div
+    id="sab-{{ section.id }}"
+    class="sab-wrapper"
+    role="region"
+    aria-label="{{ 'announcement_bar.label' | t }}"
+    data-section-id="{{ section.id }}"
+    data-display-mode="{{ display_mode }}"
+    data-auto-rotate="{{ section.settings.sab_auto_rotate }}"
+    data-rotate-speed="{{ section.settings.sab_rotate_speed }}"
+    data-dismissed-key="{{ dismissed_key }}"
+    data-countdown-enable="{{ section.settings.sab_countdown_enable }}"
+    data-countdown-end="{{ section.settings.sab_countdown_end_date }}"
+    data-countdown-expired-msg="{{ section.settings.sab_countdown_expired_message | escape }}"
+    data-marquee-speed="{{ section.settings.sab_marquee_speed }}"
+  >
+    {%- if section.settings.sab_countdown_enable -%}
+      <div class="sab-countdown" aria-live="polite" aria-atomic="true">
+        <span class="sab-countdown__timer" data-countdown-timer></span>
+      </div>
+    {%- endif -%}
+
+    <div class="sab-inner">
+      {%- if section.settings.sab_show_arrows and section.blocks.size > 1 and display_mode != 'marquee' -%}
+        <button class="sab-arrow sab-arrow--prev" aria-label="{{ 'announcement_bar.previous' | t }}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      <div class="sab-content">
+        {%- if display_mode == 'marquee' -%}
+          <div class="sab-marquee" data-marquee-container>
+            {%- capture marquee_clone_items -%}
+              {%- for block in section.blocks -%}
+                {%- capture block_icon -%}
+                  {%- case block.settings.icon -%}
+                    {%- when 'truck' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'tag' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1h5l7 7-5 5-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="4" r="1" fill="currentColor"/></svg>
+                    {%- when 'star' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4.1L7 10.4l-3.7 1.8.7-4.1-3-2.9 4.2-.6L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                    {%- when 'heart' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12S1 8.5 1 5a3 3 0 015.5-1.7h1A3 3 0 0113 5c0 3.5-6 7-6 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'gift' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="12" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="10" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v8M4 5c0-2 1.5-3 3-3s3 1 3 3" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'clock' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    {%- when 'sparkles' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M3 3l1.5 1.5M9.5 9.5L11 11M11 3l-1.5 1.5M4.5 9.5L3 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    {%- when 'megaphone' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 2v10L5 9V5l7-3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5H3a1 1 0 00-1 1v2a1 1 0 001 1h2M5 9l1 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- when 'fire' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- endcase -%}
+                {%- endcapture -%}
+                <div class="sab-marquee__item" {{ block.shopify_attributes }}>{{ block_icon }}{%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}" class="sab-link" tabindex="-1">{{ block.settings.text }}</a>{%- else -%}<span class="sab-text">{{ block.settings.text }}</span>{%- endif -%}</div>
+              {%- endfor -%}
+            {%- endcapture -%}
+            <div class="sab-marquee__track" data-marquee-track>
+              {%- for block in section.blocks -%}
+                {%- capture block_icon -%}
+                  {%- case block.settings.icon -%}
+                    {%- when 'truck' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'tag' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1h5l7 7-5 5-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="4" r="1" fill="currentColor"/></svg>
+                    {%- when 'star' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4.1L7 10.4l-3.7 1.8.7-4.1-3-2.9 4.2-.6L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                    {%- when 'heart' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12S1 8.5 1 5a3 3 0 015.5-1.7h1A3 3 0 0113 5c0 3.5-6 7-6 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'gift' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="12" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="10" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v8M4 5c0-2 1.5-3 3-3s3 1 3 3" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'clock' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    {%- when 'sparkles' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M3 3l1.5 1.5M9.5 9.5L11 11M11 3l-1.5 1.5M4.5 9.5L3 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    {%- when 'megaphone' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 2v10L5 9V5l7-3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5H3a1 1 0 00-1 1v2a1 1 0 001 1h2M5 9l1 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- when 'fire' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- endcase -%}
+                {%- endcapture -%}
+                <div class="sab-marquee__item" {{ block.shopify_attributes }}>
+                  {{ block_icon }}
+                  {%- if block.settings.link != blank -%}
+                    <a href="{{ block.settings.link }}" class="sab-link">{{ block.settings.text }}</a>
+                  {%- else -%}
+                    <span class="sab-text">{{ block.settings.text }}</span>
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            </div>
+            <div class="sab-marquee__track" aria-hidden="true" data-marquee-track-clone>
+              {{ marquee_clone_items }}
+            </div>
+          </div>
+        {%- elsif display_mode == 'fade' -%}
+          <div class="sab-fade" data-fade-container>
+            {%- for block in section.blocks -%}
+              {%- capture block_icon -%}
+                {%- case block.settings.icon -%}
+                  {%- when 'truck' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- when 'tag' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1h5l7 7-5 5-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="4" r="1" fill="currentColor"/></svg>
+                  {%- when 'star' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4.1L7 10.4l-3.7 1.8.7-4.1-3-2.9 4.2-.6L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                  {%- when 'heart' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12S1 8.5 1 5a3 3 0 015.5-1.7h1A3 3 0 0113 5c0 3.5-6 7-6 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- when 'gift' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="12" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="10" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v8M4 5c0-2 1.5-3 3-3s3 1 3 3" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- when 'clock' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  {%- when 'sparkles' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M3 3l1.5 1.5M9.5 9.5L11 11M11 3l-1.5 1.5M4.5 9.5L3 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  {%- when 'megaphone' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 2v10L5 9V5l7-3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5H3a1 1 0 00-1 1v2a1 1 0 001 1h2M5 9l1 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {%- when 'fire' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                {%- endcase -%}
+              {%- endcapture -%}
+              <div class="sab-fade__slide{% if forloop.first %} sab-fade__slide--active{% endif %}" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+                {{ block_icon }}
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}" class="sab-link">{{ block.settings.text }}</a>
+                {%- else -%}
+                  <span class="sab-text">{{ block.settings.text }}</span>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="sab-slider" data-slider-container>
+            {%- for block in section.blocks -%}
+              {%- capture block_icon -%}
+                {%- case block.settings.icon -%}
+                  {%- when 'truck' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- when 'tag' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1h5l7 7-5 5-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="4" r="1" fill="currentColor"/></svg>
+                  {%- when 'star' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4.1L7 10.4l-3.7 1.8.7-4.1-3-2.9 4.2-.6L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                  {%- when 'heart' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12S1 8.5 1 5a3 3 0 015.5-1.7h1A3 3 0 0113 5c0 3.5-6 7-6 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- when 'gift' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="12" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="10" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v8M4 5c0-2 1.5-3 3-3s3 1 3 3" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- when 'clock' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  {%- when 'sparkles' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M3 3l1.5 1.5M9.5 9.5L11 11M11 3l-1.5 1.5M4.5 9.5L3 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  {%- when 'megaphone' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 2v10L5 9V5l7-3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5H3a1 1 0 00-1 1v2a1 1 0 001 1h2M5 9l1 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {%- when 'fire' -%}
+                    <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                {%- endcase -%}
+              {%- endcapture -%}
+              <div class="sab-slide" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+                {{ block_icon }}
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}" class="sab-link">{{ block.settings.text }}</a>
+                {%- else -%}
+                  <span class="sab-text">{{ block.settings.text }}</span>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.sab_show_arrows and section.blocks.size > 1 and display_mode != 'marquee' -%}
+        <button class="sab-arrow sab-arrow--next" aria-label="{{ 'announcement_bar.next' | t }}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.sab_show_close -%}
+        <button class="sab-close" aria-label="{{ 'announcement_bar.dismiss' | t }}">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.sab_show_dots and section.blocks.size > 1 and display_mode != 'marquee' -%}
+      <div class="sab-dots" aria-hidden="true">
+        {%- for block in section.blocks -%}
+          <button class="sab-dot{% if forloop.first %} sab-dot--active{% endif %}" data-dot-index="{{ forloop.index0 }}" aria-label="{{ 'announcement_bar.go_to_slide' | t: index: forloop.index }}"></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <style>
+    #sab-{{ section.id }} {
+      --sab-bg: {{ section.settings.sab_bg_color }};
+      --sab-text: {{ section.settings.sab_text_color }};
+      --sab-arrow: {{ section.settings.sab_arrow_color }};
+      --sab-height: {{ section.settings.sab_bar_height }}px;
+      --sab-font-size: {{ section.settings.sab_font_size }}px;
+      --sab-letter-spacing: {{ section.settings.sab_letter_spacing | divided_by: 100.0 }}em;
+      --sab-font-weight: {{ section.settings.sab_font_weight }};
+      --sab-text-transform: {{ section.settings.sab_text_transform }};
+      --sab-marquee-speed: {{ section.settings.sab_marquee_speed }}s;
+    }
+
+    #sab-{{ section.id }}.sab-wrapper {
+      {%- if section.settings.sab_enable_gradient -%}
+        background: linear-gradient({{ section.settings.sab_gradient_direction }}, var(--sab-bg), {{ section.settings.sab_gradient_color_2 }});
+      {%- else -%}
+        background-color: var(--sab-bg);
+      {%- endif -%}
+      color: var(--sab-text);
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      font-family: inherit;
+      z-index: 10;
+    }
+
+    #sab-{{ section.id }} .sab-countdown {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px 0;
+      font-size: calc(var(--sab-font-size) - 1px);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    #sab-{{ section.id }} .sab-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--sab-height);
+      padding: 0 40px;
+      position: relative;
+    }
+
+    #sab-{{ section.id }} .sab-content {
+      overflow: hidden;
+      height: var(--sab-height);
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Slider mode */
+    #sab-{{ section.id }} .sab-slider {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+      will-change: transform;
+    }
+
+    #sab-{{ section.id }} .sab-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--sab-height);
+      text-align: center;
+      gap: 6px;
+    }
+
+    /* Fade mode */
+    #sab-{{ section.id }} .sab-fade {
+      display: grid;
+      width: 100%;
+      height: var(--sab-height);
+    }
+
+    #sab-{{ section.id }} .sab-fade__slide {
+      grid-area: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--sab-height);
+      text-align: center;
+      gap: 6px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), visibility 0.5s;
+    }
+
+    #sab-{{ section.id }} .sab-fade__slide--active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Marquee mode */
+    #sab-{{ section.id }} .sab-marquee {
+      display: flex;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    #sab-{{ section.id }} .sab-marquee__track {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      white-space: nowrap;
+      min-width: max-content;
+      padding: 0 20px;
+      animation: sab-marquee-{{ section.id }} var(--sab-marquee-speed) linear infinite;
+    }
+
+    #sab-{{ section.id }} .sab-marquee__item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    @keyframes sab-marquee-{{ section.id }} {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-100%, 0, 0);
+      }
+    }
+
+    /* Shared text styles */
+    #sab-{{ section.id }} .sab-text,
+    #sab-{{ section.id }} .sab-link {
+      font-size: var(--sab-font-size);
+      font-weight: var(--sab-font-weight);
+      text-transform: var(--sab-text-transform);
+      letter-spacing: var(--sab-letter-spacing);
+      color: var(--sab-text);
+      text-decoration: none;
+      line-height: 1.4;
+      padding: 4px 10px;
+    }
+
+    #sab-{{ section.id }} .sab-link:hover {
+      text-decoration: underline;
+    }
+
+    #sab-{{ section.id }} .sab-icon {
+      flex-shrink: 0;
+      color: var(--sab-text);
+    }
+
+    /* Arrows */
+    #sab-{{ section.id }} .sab-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--sab-arrow);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    #sab-{{ section.id }} .sab-arrow:hover {
+      opacity: 1;
+    }
+
+    #sab-{{ section.id }} .sab-arrow--prev {
+      left: 12px;
+    }
+
+    #sab-{{ section.id }} .sab-arrow--next {
+      right: 12px;
+    }
+
+    /* Close button */
+    #sab-{{ section.id }} .sab-close {
+      position: absolute;
+      top: 50%;
+      {%- if section.settings.sab_show_arrows and section.blocks.size > 1 and display_mode != 'marquee' -%}
+        right: 44px;
+      {%- else -%}
+        right: 12px;
+      {%- endif -%}
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--sab-arrow);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    #sab-{{ section.id }} .sab-close:hover {
+      opacity: 1;
+    }
+
+    /* Dots */
+    #sab-{{ section.id }} .sab-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding-bottom: 6px;
+    }
+
+    #sab-{{ section.id }} .sab-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--sab-text);
+      opacity: 0.35;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    #sab-{{ section.id }} .sab-dot--active {
+      opacity: 1;
+    }
+
+    /* Hidden state */
+    #sab-{{ section.id }}.sab-hidden {
+      display: none;
+    }
+
+    /* Mobile hide */
+    {%- if section.settings.sab_hide_on_mobile -%}
+      @media screen and (max-width: 749px) {
+        #sab-{{ section.id }}.sab-wrapper {
+          display: none;
+        }
+      }
+    {%- endif -%}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      #sab-{{ section.id }} .sab-slider {
+        transition: none;
+      }
+      #sab-{{ section.id }} .sab-fade__slide {
+        transition: none;
+      }
+      #sab-{{ section.id }} .sab-marquee__track {
+        animation: none;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      var sectionId = '{{ section.id }}';
+      var container = document.getElementById('sab-' + sectionId);
+      if (!container) return;
+
+      var displayMode = container.getAttribute('data-display-mode');
+      var dismissedKey = container.getAttribute('data-dismissed-key');
+      var autoRotate = container.getAttribute('data-auto-rotate') === 'true';
+      var rotateSpeed = parseInt(container.getAttribute('data-rotate-speed'), 10) * 1000;
+      var countdownEnable = container.getAttribute('data-countdown-enable') === 'true';
+      var countdownEnd = container.getAttribute('data-countdown-end');
+      var countdownExpiredMsg = container.getAttribute('data-countdown-expired-msg');
+
+      // Session dismiss check
+      if (sessionStorage.getItem(dismissedKey) === '1') {
+        container.classList.add('sab-hidden');
+        return;
+      }
+
+      var currentIndex = 0;
+      var timer = null;
+      var countdownInterval = null;
+
+      // Get slides based on mode
+      var slides, totalSlides, slider, fadeContainer;
+      if (displayMode === 'slider') {
+        slider = container.querySelector('[data-slider-container]');
+        slides = container.querySelectorAll('.sab-slide');
+        totalSlides = slides.length;
+      } else if (displayMode === 'fade') {
+        fadeContainer = container.querySelector('[data-fade-container]');
+        slides = container.querySelectorAll('.sab-fade__slide');
+        totalSlides = slides.length;
+      } else {
+        totalSlides = 0;
+      }
+
+      var dots = container.querySelectorAll('.sab-dot');
+      var prevBtn = container.querySelector('.sab-arrow--prev');
+      var nextBtn = container.querySelector('.sab-arrow--next');
+      var closeBtn = container.querySelector('.sab-close');
+
+      var barHeight = container.querySelector('.sab-content') ? container.querySelector('.sab-content').offsetHeight : 44;
+
+      function goTo(index) {
+        if (totalSlides <= 0) return;
+        if (index < 0) index = totalSlides - 1;
+        if (index >= totalSlides) index = 0;
+        currentIndex = index;
+
+        if (displayMode === 'slider' && slider) {
+          slider.style.transform = 'translateY(-' + (currentIndex * barHeight) + 'px)';
+        } else if (displayMode === 'fade' && slides) {
+          for (var i = 0; i < slides.length; i++) {
+            slides[i].classList.remove('sab-fade__slide--active');
+          }
+          slides[currentIndex].classList.add('sab-fade__slide--active');
+        }
+        updateDots();
+      }
+
+      function updateDots() {
+        if (dots.length === 0) return;
+        for (var i = 0; i < dots.length; i++) {
+          dots[i].classList.remove('sab-dot--active');
+        }
+        if (dots[currentIndex]) {
+          dots[currentIndex].classList.add('sab-dot--active');
+        }
+      }
+
+      function startTimer() {
+        if (!autoRotate || totalSlides <= 1 || displayMode === 'marquee') return;
+        stopTimer();
+        timer = setInterval(function() {
+          goTo(currentIndex + 1);
+        }, rotateSpeed);
+      }
+
+      function stopTimer() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      function resetTimer() {
+        stopTimer();
+        startTimer();
+      }
+
+      function recalcHeight() {
+        barHeight = container.querySelector('.sab-content') ? container.querySelector('.sab-content').offsetHeight : 44;
+        if (displayMode === 'slider' && slider) {
+          slider.style.transform = 'translateY(-' + (currentIndex * barHeight) + 'px)';
+        }
+      }
+
+      // Navigation arrows
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          goTo(currentIndex - 1);
+          resetTimer();
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          goTo(currentIndex + 1);
+          resetTimer();
+        });
+      }
+
+      // Dot navigation
+      for (var i = 0; i < dots.length; i++) {
+        dots[i].addEventListener('click', (function(idx) {
+          return function() {
+            goTo(idx);
+            resetTimer();
+          };
+        })(i));
+      }
+
+      // Close button
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          container.classList.add('sab-hidden');
+          sessionStorage.setItem(dismissedKey, '1');
+          stopTimer();
+          if (countdownInterval) clearInterval(countdownInterval);
+        });
+      }
+
+      // Pause on hover
+      container.addEventListener('mouseenter', function() {
+        stopTimer();
+      });
+
+      container.addEventListener('mouseleave', function() {
+        startTimer();
+      });
+
+      // Keyboard navigation
+      container.addEventListener('keydown', function(e) {
+        if (displayMode === 'marquee') return;
+        if (e.key === 'ArrowLeft') {
+          goTo(currentIndex - 1);
+          resetTimer();
+        } else if (e.key === 'ArrowRight') {
+          goTo(currentIndex + 1);
+          resetTimer();
+        }
+      });
+
+      // Window resize
+      window.addEventListener('resize', function() {
+        recalcHeight();
+      });
+
+      // Countdown timer
+      if (countdownEnable && countdownEnd) {
+        var timerEl = container.querySelector('[data-countdown-timer]');
+        if (timerEl) {
+          function parseEndDate(dateStr) {
+            if (!dateStr) return null;
+            var parts = dateStr.trim().split(' ');
+            var dateParts = parts[0].split('-');
+            var year = parseInt(dateParts[0], 10);
+            var month = parseInt(dateParts[1], 10) - 1;
+            var day = parseInt(dateParts[2], 10);
+            var hours = 0, minutes = 0;
+            if (parts.length > 1) {
+              var timeParts = parts[1].split(':');
+              hours = parseInt(timeParts[0], 10) || 0;
+              minutes = parseInt(timeParts[1], 10) || 0;
+            }
+            return new Date(Date.UTC(year, month, day, hours, minutes, 0));
+          }
+
+          function updateCountdown() {
+            var endDate = parseEndDate(countdownEnd);
+            if (!endDate) return;
+            var now = new Date();
+            var diff = endDate - now;
+
+            if (diff <= 0) {
+              timerEl.textContent = countdownExpiredMsg || 'Offer has expired';
+              if (countdownInterval) clearInterval(countdownInterval);
+              return;
+            }
+
+            var days = Math.floor(diff / 86400000);
+            var hrs = Math.floor((diff % 86400000) / 3600000);
+            var mins = Math.floor((diff % 3600000) / 60000);
+            var secs = Math.floor((diff % 60000) / 1000);
+
+            var pad = function(n) { return n < 10 ? '0' + n : n; };
+            timerEl.textContent = pad(days) + ':' + pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+          }
+
+          updateCountdown();
+          countdownInterval = setInterval(updateCountdown, 1000);
+        }
+      }
+
+      // Start auto-rotation
+      startTimer();
+
+      // Shopify Theme Editor events
+      if (Shopify && Shopify.designMode) {
+        document.addEventListener('shopify:section:load', function(event) {
+          if (event.detail.sectionId === sectionId) {
+            recalcHeight();
+            startTimer();
+          }
+        });
+
+        document.addEventListener('shopify:block:select', function(event) {
+          if (event.detail.sectionId === sectionId) {
+            stopTimer();
+            var blockEl = event.target.closest('[data-slide-index]');
+            if (blockEl) {
+              var idx = parseInt(blockEl.getAttribute('data-slide-index'), 10);
+              goTo(idx);
+            }
+          }
+        });
+
+        document.addEventListener('shopify:block:deselect', function(event) {
+          if (event.detail.sectionId === sectionId) {
+            startTimer();
+          }
+        });
+      }
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Premium Announcement Bar",
+  "tag": "section",
+  "class": "sab-section",
+  "enabled_on": {
+    "groups": ["header", "aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Display Mode"
+    },
+    {
+      "type": "select",
+      "id": "display_mode",
+      "label": "Display mode",
+      "options": [
+        { "value": "slider", "label": "Slider (vertical slide)" },
+        { "value": "fade", "label": "Fade (crossfade)" },
+        { "value": "marquee", "label": "Marquee (continuous scroll)" }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "sab_bg_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sab_text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "sab_arrow_color",
+      "label": "Arrow and icon color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_enable_gradient",
+      "label": "Enable gradient background",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "sab_gradient_color_2",
+      "label": "Gradient second color",
+      "default": "#333333"
+    },
+    {
+      "type": "select",
+      "id": "sab_gradient_direction",
+      "label": "Gradient direction",
+      "options": [
+        { "value": "to right", "label": "To right" },
+        { "value": "to left", "label": "To left" },
+        { "value": "to bottom", "label": "To bottom" },
+        { "value": "to top", "label": "To top" },
+        { "value": "135deg", "label": "Diagonal (135deg)" },
+        { "value": "45deg", "label": "Diagonal (45deg)" }
+      ],
+      "default": "to right"
+    },
+    {
+      "type": "header",
+      "content": "Bar Size"
+    },
+    {
+      "type": "range",
+      "id": "sab_bar_height",
+      "label": "Bar height",
+      "min": 32,
+      "max": 60,
+      "step": 2,
+      "default": 44,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "sab_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "sab_font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "sab_text_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "Normal" },
+        { "value": "uppercase", "label": "UPPERCASE" },
+        { "value": "lowercase", "label": "lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "sab_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Rotation"
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_auto_rotate",
+      "label": "Auto-rotate messages",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "sab_rotate_speed",
+      "label": "Rotation speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "header",
+      "content": "Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_show_dots",
+      "label": "Show dot indicators",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_show_close",
+      "label": "Show close button",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer"
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_countdown_enable",
+      "label": "Enable countdown timer",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "sab_countdown_end_date",
+      "label": "Countdown end date",
+      "info": "Format: YYYY-MM-DD HH:MM or YYYY-MM-DD"
+    },
+    {
+      "type": "text",
+      "id": "sab_countdown_expired_message",
+      "label": "Expired message",
+      "default": "Offer has expired"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "sab_hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "range",
+      "id": "sab_marquee_speed",
+      "label": "Marquee speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "unit": "s"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message text",
+          "default": "Free shipping on orders over $200"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "truck", "label": "Delivery truck" },
+            { "value": "tag", "label": "Sale tag" },
+            { "value": "star", "label": "Star" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "sparkles", "label": "Sparkles" },
+            { "value": "megaphone", "label": "Megaphone" },
+            { "value": "fire", "label": "Fire" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Announcement Bar",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free shipping on orders over $200", "icon": "truck" } },
+        { "type": "message", "settings": { "text": "40% OFF SITEWIDE - USE CODE: TAKE40", "icon": "tag" } },
+        { "type": "message", "settings": { "text": "New arrivals just dropped - Shop now", "icon": "star" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
