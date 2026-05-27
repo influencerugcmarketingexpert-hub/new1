@@ -1,0 +1,26 @@
+{
+  "id": "FEAT-004",
+  "type": "chore",
+  "description": "Update sections/header-group.json to match the new premium announcement bar schema defaults while keeping the section reference and block order intact",
+  "status": "completed",
+  "steps": [
+    "Read the current sections/header-group.json file.",
+    "Update the 'custom_NTWnLC' section settings to match the new schema defaults from the rebuilt custom.liquid. The new settings object should include: display_mode ('slider'), color_scheme ('scheme-1'), use_custom_colors (false), custom_bg_color ('#000000'), custom_text_color ('#ffffff'), custom_accent_color ('#ffffff'), section_width ('full-width'), font_family ('body'), font_size (13), font_weight ('400'), text_transform ('none'), letter_spacing (0), bar_height (44), padding_top (0), padding_bottom (0), show_divider (false), divider_color ('#e5e5e5'), divider_width (1), auto_rotate (true), rotate_speed (5), show_arrows (true), show_dots (false), show_progress_bar (true), show_close (false), pause_on_hover (true), marquee_speed (40).",
+    "Update each message block to include the new block settings: icon ('none'), show_countdown (false), countdown_date ('') in addition to existing text and link values.",
+    "Keep the section order unchanged: custom_NTWnLC first, then header_announcements_9jGBFp, then header_section.",
+    "Ensure the resulting JSON is valid."
+  ],
+  "acceptance_criteria": [
+    "sections/header-group.json is valid JSON",
+    "custom_NTWnLC section settings include all new schema fields with valid defaults",
+    "Block order and block IDs are preserved",
+    "Section order is preserved (custom_NTWnLC first)",
+    "Each message block has icon, show_countdown, and countdown_date settings"
+  ],
+  "verification": [
+    "python3 -c \"import json; data=json.load(open('/projects/sandbox/new1/sections/header-group.json')); print('Valid JSON'); assert 'custom_NTWnLC' in data['sections']; print('Section exists'); assert data['order'][0]=='custom_NTWnLC'; print('Order correct'); settings=data['sections']['custom_NTWnLC']['settings']; assert 'display_mode' in settings; print('New settings present')\"",
+    "python3 -c \"import json; data=json.load(open('/projects/sandbox/new1/sections/header-group.json')); blocks=data['sections']['custom_NTWnLC']['blocks']; assert all('icon' in b['settings'] for b in blocks.values()); print('Block settings updated')\""
+  ],
+  "blocked_reason": null,
+  "findings": "Updated header-group.json with new premium announcement bar schema. Settings replaced old sab_* prefixed fields with new display_mode, color_scheme, typography, and control settings. Blocks updated with icon, show_countdown, and countdown_date fields. All verification checks passed."
+}
