@@ -35,7 +35,7 @@
       {%- if section.settings.display_mode == 'marquee' -%}
         <div class="sab-marquee-track">
           {%- for block in section.blocks -%}
-            <div class="sab-slide" {{ block.shopify_attributes }}>
+            <div class="sab-slide" {{ block.shopify_attributes }} data-block-id="{{ block.id }}">
               {%- case block.settings.icon -%}
                 {%- when 'truck' -%}
                   <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h9v8H1zM10 6h3l2 2v4h-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>
@@ -64,41 +64,11 @@
               {%- endif -%}
             </div>
           {%- endfor -%}
-          {%- for block in section.blocks -%}
-            <div class="sab-slide" aria-hidden="true">
-              {%- case block.settings.icon -%}
-                {%- when 'truck' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h9v8H1zM10 6h3l2 2v4h-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>
-                {%- when 'tag' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1h6l7 7-6 6-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1" fill="currentColor"/></svg></span>
-                {%- when 'gift' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="14" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="12" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 6V14M4.5 6C3.1 6 2 4.9 2 3.5S3.1 1 4.5 1C6 1 8 3 8 6M11.5 6C12.9 6 14 4.9 14 3.5S12.9 1 11.5 1C10 1 8 3 8 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-                {%- when 'star' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1l2.2 4.4 4.8.7-3.5 3.4.8 4.8L8 12l-4.3 2.3.8-4.8L1 6.1l4.8-.7L8 1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                {%- when 'bolt' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L3 9h5l-1 6 6-8H8l1-6z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                {%- when 'clock' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                {%- when 'heart' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                {%- when 'percent' -%}
-                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4.5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="11.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M13 3L3 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              {%- endcase -%}
-              {%- if block.settings.link != blank -%}
-                <a href="{{ block.settings.link }}" class="sab-message" tabindex="-1">{{ block.settings.text }}</a>
-              {%- else -%}
-                <span class="sab-message">{{ block.settings.text }}</span>
-              {%- endif -%}
-              {%- if block.settings.show_countdown and block.settings.countdown_date != blank -%}
-                {% render 'announcement-countdown', end_date: block.settings.countdown_date %}
-              {%- endif -%}
-            </div>
-          {%- endfor -%}
         </div>
       {%- else -%}
         <div class="sab-slides">
           {%- for block in section.blocks -%}
-            <div class="sab-slide{% if forloop.first %} sab-slide--active{% endif %}" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+            <div class="sab-slide{% if forloop.first %} sab-slide--active{% endif %}" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}" data-block-id="{{ block.id }}">
               {%- case block.settings.icon -%}
                 {%- when 'truck' -%}
                   <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h9v8H1zM10 6h3l2 2v4h-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>
@@ -420,6 +390,50 @@
     }
     #sab-{{ section.id }} .sab-message {
       font-size: calc(var(--sab-font-size) - 1px);
+    }
+  }
+
+  /* Countdown timer */
+  #sab-{{ section.id }} .sab-countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+  }
+
+  #sab-{{ section.id }} .sab-countdown__days,
+  #sab-{{ section.id }} .sab-countdown__hours,
+  #sab-{{ section.id }} .sab-countdown__minutes,
+  #sab-{{ section.id }} .sab-countdown__seconds {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  #sab-{{ section.id }} .sab-countdown__value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: var(--sab-font-size);
+    font-weight: 600;
+    min-width: 1.4em;
+    text-align: center;
+  }
+
+  #sab-{{ section.id }} .sab-countdown__label {
+    font-size: calc(var(--sab-font-size) - 2px);
+    opacity: 0.8;
+    text-transform: lowercase;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    #sab-{{ section.id }} .sab-marquee-track {
+      animation: none !important;
+    }
+    #sab-{{ section.id }} .sab-slides .sab-slide {
+      transition: none !important;
+    }
+    #sab-{{ section.id }} .sab-progress__bar {
+      transition: none !important;
     }
   }
 </style>

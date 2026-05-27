@@ -109,8 +109,13 @@
     }
 
     var self = this;
+    this._resizeTimeout = null;
     this._boundHandlers.resize = function() {
-      self._calcMarqueeDuration();
+      if (self._resizeTimeout) return;
+      self._resizeTimeout = setTimeout(function() {
+        self._resizeTimeout = null;
+        self._calcMarqueeDuration();
+      }, 150);
     };
     window.addEventListener('resize', this._boundHandlers.resize);
   };
@@ -144,6 +149,7 @@
 
   PremiumAnnouncementBar.prototype.startAutoRotate = function() {
     if (this.displayMode !== 'slider' || this.slideCount <= 1) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     var self = this;
     this.stopAutoRotate();
@@ -325,6 +331,11 @@
   PremiumAnnouncementBar.prototype.destroy = function() {
     this.stopAutoRotate();
 
+    if (this._resizeTimeout) {
+      clearTimeout(this._resizeTimeout);
+      this._resizeTimeout = null;
+    }
+
     for (var i = 0; i < this.countdownIntervals.length; i++) {
       clearInterval(this.countdownIntervals[i]);
     }
@@ -390,6 +401,15 @@
       container._premiumAnnouncementBar = new PremiumAnnouncementBar(container);
     } else {
       initAll();
+    }
+  });
+
+  document.addEventListener('shopify:section:unload', function(e) {
+    var sectionId = e.detail ? e.detail.sectionId : null;
+    if (!sectionId) return;
+    var container = document.querySelector('[data-premium-announcement-bar][data-section-id="' + sectionId + '"]');
+    if (container && container._premiumAnnouncementBar) {
+      container._premiumAnnouncementBar.destroy();
     }
   });
 
