@@ -5,7 +5,7 @@
     id="sab-{{ section.id }}"
     class="sab-wrapper"
     role="region"
-    aria-label="Announcement bar"
+    aria-label="{{ 'announcement_bar.label' | t }}"
     data-section-id="{{ section.id }}"
     data-display-mode="{{ display_mode }}"
     data-auto-rotate="{{ section.settings.sab_auto_rotate }}"
@@ -24,7 +24,7 @@
 
     <div class="sab-inner">
       {%- if section.settings.sab_show_arrows and section.blocks.size > 1 and display_mode != 'marquee' -%}
-        <button class="sab-arrow sab-arrow--prev" aria-label="Previous announcement">
+        <button class="sab-arrow sab-arrow--prev" aria-label="{{ 'announcement_bar.previous' | t }}">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -34,9 +34,9 @@
       <div class="sab-content">
         {%- if display_mode == 'marquee' -%}
           <div class="sab-marquee" data-marquee-container>
-            <div class="sab-marquee__track" data-marquee-track>
+            {%- capture marquee_clone_items -%}
               {%- for block in section.blocks -%}
-                <div class="sab-marquee__item" {{ block.shopify_attributes }}>
+                {%- capture block_icon -%}
                   {%- case block.settings.icon -%}
                     {%- when 'truck' -%}
                       <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -57,6 +57,36 @@
                     {%- when 'fire' -%}
                       <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
                   {%- endcase -%}
+                {%- endcapture -%}
+                <div class="sab-marquee__item" {{ block.shopify_attributes }}>{{ block_icon }}{%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}" class="sab-link" tabindex="-1">{{ block.settings.text }}</a>{%- else -%}<span class="sab-text">{{ block.settings.text }}</span>{%- endif -%}</div>
+              {%- endfor -%}
+            {%- endcapture -%}
+            <div class="sab-marquee__track" data-marquee-track>
+              {%- for block in section.blocks -%}
+                {%- capture block_icon -%}
+                  {%- case block.settings.icon -%}
+                    {%- when 'truck' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'tag' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1h5l7 7-5 5-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="4" r="1" fill="currentColor"/></svg>
+                    {%- when 'star' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4.1L7 10.4l-3.7 1.8.7-4.1-3-2.9 4.2-.6L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                    {%- when 'heart' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12S1 8.5 1 5a3 3 0 015.5-1.7h1A3 3 0 0113 5c0 3.5-6 7-6 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'gift' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="12" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="10" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v8M4 5c0-2 1.5-3 3-3s3 1 3 3" stroke="currentColor" stroke-width="1.2"/></svg>
+                    {%- when 'clock' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    {%- when 'sparkles' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M3 3l1.5 1.5M9.5 9.5L11 11M11 3l-1.5 1.5M4.5 9.5L3 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    {%- when 'megaphone' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 2v10L5 9V5l7-3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5H3a1 1 0 00-1 1v2a1 1 0 001 1h2M5 9l1 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- when 'fire' -%}
+                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
+                  {%- endcase -%}
+                {%- endcapture -%}
+                <div class="sab-marquee__item" {{ block.shopify_attributes }}>
+                  {{ block_icon }}
                   {%- if block.settings.link != blank -%}
                     <a href="{{ block.settings.link }}" class="sab-link">{{ block.settings.text }}</a>
                   {%- else -%}
@@ -66,41 +96,13 @@
               {%- endfor -%}
             </div>
             <div class="sab-marquee__track" aria-hidden="true" data-marquee-track-clone>
-              {%- for block in section.blocks -%}
-                <div class="sab-marquee__item">
-                  {%- case block.settings.icon -%}
-                    {%- when 'truck' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
-                    {%- when 'tag' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1h5l7 7-5 5-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="4" r="1" fill="currentColor"/></svg>
-                    {%- when 'star' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4.1L7 10.4l-3.7 1.8.7-4.1-3-2.9 4.2-.6L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-                    {%- when 'heart' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 12S1 8.5 1 5a3 3 0 015.5-1.7h1A3 3 0 0113 5c0 3.5-6 7-6 7z" stroke="currentColor" stroke-width="1.2"/></svg>
-                    {%- when 'gift' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="5" width="12" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="10" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v8M4 5c0-2 1.5-3 3-3s3 1 3 3" stroke="currentColor" stroke-width="1.2"/></svg>
-                    {%- when 'clock' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-                    {%- when 'sparkles' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M3 3l1.5 1.5M9.5 9.5L11 11M11 3l-1.5 1.5M4.5 9.5L3 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-                    {%- when 'megaphone' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 2v10L5 9V5l7-3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5H3a1 1 0 00-1 1v2a1 1 0 001 1h2M5 9l1 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    {%- when 'fire' -%}
-                      <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
-                  {%- endcase -%}
-                  {%- if block.settings.link != blank -%}
-                    <a href="{{ block.settings.link }}" class="sab-link" tabindex="-1">{{ block.settings.text }}</a>
-                  {%- else -%}
-                    <span class="sab-text">{{ block.settings.text }}</span>
-                  {%- endif -%}
-                </div>
-              {%- endfor -%}
+              {{ marquee_clone_items }}
             </div>
           </div>
         {%- elsif display_mode == 'fade' -%}
           <div class="sab-fade" data-fade-container>
             {%- for block in section.blocks -%}
-              <div class="sab-fade__slide{% if forloop.first %} sab-fade__slide--active{% endif %}" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+              {%- capture block_icon -%}
                 {%- case block.settings.icon -%}
                   {%- when 'truck' -%}
                     <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -121,6 +123,9 @@
                   {%- when 'fire' -%}
                     <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
                 {%- endcase -%}
+              {%- endcapture -%}
+              <div class="sab-fade__slide{% if forloop.first %} sab-fade__slide--active{% endif %}" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+                {{ block_icon }}
                 {%- if block.settings.link != blank -%}
                   <a href="{{ block.settings.link }}" class="sab-link">{{ block.settings.text }}</a>
                 {%- else -%}
@@ -132,7 +137,7 @@
         {%- else -%}
           <div class="sab-slider" data-slider-container>
             {%- for block in section.blocks -%}
-              <div class="sab-slide" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+              {%- capture block_icon -%}
                 {%- case block.settings.icon -%}
                   {%- when 'truck' -%}
                     <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 2h8v7H1z" stroke="currentColor" stroke-width="1.2"/><path d="M9 5h2.5L13 7.5V9h-4V5z" stroke="currentColor" stroke-width="1.2"/><circle cx="3.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10.5" cy="10.5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -153,6 +158,9 @@
                   {%- when 'fire' -%}
                     <svg class="sab-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1C5 4 3 5.5 3 8.5a4 4 0 008 0C11 5.5 9 4 7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M7 7c-1 1.5-1.5 2-1.5 3.2a1.5 1.5 0 003 0C8.5 9 8 8.5 7 7z" stroke="currentColor" stroke-width="1.2"/></svg>
                 {%- endcase -%}
+              {%- endcapture -%}
+              <div class="sab-slide" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+                {{ block_icon }}
                 {%- if block.settings.link != blank -%}
                   <a href="{{ block.settings.link }}" class="sab-link">{{ block.settings.text }}</a>
                 {%- else -%}
@@ -165,7 +173,7 @@
       </div>
 
       {%- if section.settings.sab_show_arrows and section.blocks.size > 1 and display_mode != 'marquee' -%}
-        <button class="sab-arrow sab-arrow--next" aria-label="Next announcement">
+        <button class="sab-arrow sab-arrow--next" aria-label="{{ 'announcement_bar.next' | t }}">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -173,7 +181,7 @@
       {%- endif -%}
 
       {%- if section.settings.sab_show_close -%}
-        <button class="sab-close" aria-label="Dismiss announcement bar">
+        <button class="sab-close" aria-label="{{ 'announcement_bar.dismiss' | t }}">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
@@ -184,7 +192,7 @@
     {%- if section.settings.sab_show_dots and section.blocks.size > 1 and display_mode != 'marquee' -%}
       <div class="sab-dots" aria-hidden="true">
         {%- for block in section.blocks -%}
-          <button class="sab-dot{% if forloop.first %} sab-dot--active{% endif %}" data-dot-index="{{ forloop.index0 }}" aria-label="Go to announcement {{ forloop.index }}"></button>
+          <button class="sab-dot{% if forloop.first %} sab-dot--active{% endif %}" data-dot-index="{{ forloop.index0 }}" aria-label="{{ 'announcement_bar.go_to_slide' | t: index: forloop.index }}"></button>
         {%- endfor -%}
       </div>
     {%- endif -%}
@@ -247,6 +255,8 @@
 
     /* Slider mode */
     #sab-{{ section.id }} .sab-slider {
+      display: flex;
+      flex-direction: column;
       transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
       will-change: transform;
     }
@@ -374,7 +384,11 @@
     #sab-{{ section.id }} .sab-close {
       position: absolute;
       top: 50%;
-      right: 12px;
+      {%- if section.settings.sab_show_arrows and section.blocks.size > 1 and display_mode != 'marquee' -%}
+        right: 44px;
+      {%- else -%}
+        right: 12px;
+      {%- endif -%}
       transform: translateY(-50%);
       background: none;
       border: none;
@@ -623,7 +637,7 @@
               hours = parseInt(timeParts[0], 10) || 0;
               minutes = parseInt(timeParts[1], 10) || 0;
             }
-            return new Date(year, month, day, hours, minutes, 0);
+            return new Date(Date.UTC(year, month, day, hours, minutes, 0));
           }
 
           function updateCountdown() {
