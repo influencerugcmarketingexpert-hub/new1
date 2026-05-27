@@ -1,0 +1,748 @@
+{%- if section.blocks.size > 0 -%}
+<script src="{{ 'premium-announcement-bar.js' | asset_url }}" defer></script>
+
+{%- if section.settings.use_custom_colors -%}
+  {%- assign color_class = '' -%}
+{%- else -%}
+  {%- assign color_class = 'color-' | append: section.settings.color_scheme -%}
+{%- endif -%}
+
+<div
+  id="sab-{{ section.id }}"
+  class="sab-wrapper {{ color_class }}"
+  data-premium-announcement-bar
+  data-section-id="{{ section.id }}"
+  data-display-mode="{{ section.settings.display_mode }}"
+  data-auto-rotate="{{ section.settings.auto_rotate }}"
+  data-rotate-speed="{{ section.settings.rotate_speed }}"
+  data-pause-on-hover="{{ section.settings.pause_on_hover }}"
+  data-dismissed-key="sab-dismissed-{{ section.id }}"
+  data-marquee-speed="{{ section.settings.marquee_speed }}"
+  role="region"
+  aria-label="{{ 'sections.premium_announcement.announcement_bar' | t }}"
+>
+  <div class="sab-inner{% if section.settings.section_width == 'page-width' %} page-width{% endif %}">
+
+    {%- if section.settings.show_arrows and section.blocks.size > 1 -%}
+      <button class="sab-arrow sab-arrow--prev" aria-label="{{ 'sections.premium_announcement.previous' | t }}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    {%- endif -%}
+
+    <div class="sab-slides-container" aria-live="polite">
+      {%- if section.settings.display_mode == 'marquee' -%}
+        <div class="sab-marquee-track">
+          {%- for block in section.blocks -%}
+            <div class="sab-slide" {{ block.shopify_attributes }}>
+              {%- case block.settings.icon -%}
+                {%- when 'truck' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h9v8H1zM10 6h3l2 2v4h-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>
+                {%- when 'tag' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1h6l7 7-6 6-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1" fill="currentColor"/></svg></span>
+                {%- when 'gift' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="14" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="12" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 6V14M4.5 6C3.1 6 2 4.9 2 3.5S3.1 1 4.5 1C6 1 8 3 8 6M11.5 6C12.9 6 14 4.9 14 3.5S12.9 1 11.5 1C10 1 8 3 8 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+                {%- when 'star' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1l2.2 4.4 4.8.7-3.5 3.4.8 4.8L8 12l-4.3 2.3.8-4.8L1 6.1l4.8-.7L8 1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'bolt' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L3 9h5l-1 6 6-8H8l1-6z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'clock' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'heart' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'percent' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4.5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="11.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M13 3L3 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              {%- endcase -%}
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="sab-message">{{ block.settings.text }}</a>
+              {%- else -%}
+                <span class="sab-message">{{ block.settings.text }}</span>
+              {%- endif -%}
+              {%- if block.settings.show_countdown and block.settings.countdown_date != blank -%}
+                {% render 'announcement-countdown', end_date: block.settings.countdown_date %}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+          {%- for block in section.blocks -%}
+            <div class="sab-slide" aria-hidden="true">
+              {%- case block.settings.icon -%}
+                {%- when 'truck' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h9v8H1zM10 6h3l2 2v4h-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>
+                {%- when 'tag' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1h6l7 7-6 6-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1" fill="currentColor"/></svg></span>
+                {%- when 'gift' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="14" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="12" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 6V14M4.5 6C3.1 6 2 4.9 2 3.5S3.1 1 4.5 1C6 1 8 3 8 6M11.5 6C12.9 6 14 4.9 14 3.5S12.9 1 11.5 1C10 1 8 3 8 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+                {%- when 'star' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1l2.2 4.4 4.8.7-3.5 3.4.8 4.8L8 12l-4.3 2.3.8-4.8L1 6.1l4.8-.7L8 1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'bolt' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L3 9h5l-1 6 6-8H8l1-6z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'clock' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'heart' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'percent' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4.5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="11.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M13 3L3 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              {%- endcase -%}
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="sab-message" tabindex="-1">{{ block.settings.text }}</a>
+              {%- else -%}
+                <span class="sab-message">{{ block.settings.text }}</span>
+              {%- endif -%}
+              {%- if block.settings.show_countdown and block.settings.countdown_date != blank -%}
+                {% render 'announcement-countdown', end_date: block.settings.countdown_date %}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div class="sab-slides">
+          {%- for block in section.blocks -%}
+            <div class="sab-slide{% if forloop.first %} sab-slide--active{% endif %}" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+              {%- case block.settings.icon -%}
+                {%- when 'truck' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 3h9v8H1zM10 6h3l2 2v4h-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg></span>
+                {%- when 'tag' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1h6l7 7-6 6-7-7V1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4.5" cy="4.5" r="1" fill="currentColor"/></svg></span>
+                {%- when 'gift' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="14" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="12" height="5" rx="0.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 6V14M4.5 6C3.1 6 2 4.9 2 3.5S3.1 1 4.5 1C6 1 8 3 8 6M11.5 6C12.9 6 14 4.9 14 3.5S12.9 1 11.5 1C10 1 8 3 8 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+                {%- when 'star' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1l2.2 4.4 4.8.7-3.5 3.4.8 4.8L8 12l-4.3 2.3.8-4.8L1 6.1l4.8-.7L8 1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'bolt' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L3 9h5l-1 6 6-8H8l1-6z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'clock' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'heart' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 14s-5.5-3.5-5.5-7A3.5 3.5 0 018 4a3.5 3.5 0 015.5 3c0 3.5-5.5 7-5.5 7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                {%- when 'percent' -%}
+                  <span class="sab-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4.5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="11.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M13 3L3 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              {%- endcase -%}
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="sab-message">{{ block.settings.text }}</a>
+              {%- else -%}
+                <span class="sab-message">{{ block.settings.text }}</span>
+              {%- endif -%}
+              {%- if block.settings.show_countdown and block.settings.countdown_date != blank -%}
+                {% render 'announcement-countdown', end_date: block.settings.countdown_date %}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_arrows and section.blocks.size > 1 -%}
+      <button class="sab-arrow sab-arrow--next" aria-label="{{ 'sections.premium_announcement.next' | t }}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    {%- endif -%}
+
+    {%- if section.settings.show_close -%}
+      <button class="sab-close" aria-label="{{ 'sections.premium_announcement.close' | t }}">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_progress_bar and section.settings.auto_rotate and section.settings.display_mode == 'slider' -%}
+    <div class="sab-progress">
+      <div class="sab-progress__bar"></div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_dots and section.blocks.size > 1 and section.settings.display_mode == 'slider' -%}
+    <div class="sab-dots" aria-hidden="true">
+      {%- for block in section.blocks -%}
+        <button class="sab-dot{% if forloop.first %} sab-dot--active{% endif %}" data-dot-index="{{ forloop.index0 }}" aria-label="Go to announcement {{ forloop.index }}"></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  #sab-{{ section.id }} {
+    {%- if section.settings.use_custom_colors -%}
+      --sab-bg: {{ section.settings.custom_bg_color }};
+      --sab-text: {{ section.settings.custom_text_color }};
+      --sab-accent: {{ section.settings.custom_accent_color }};
+    {%- else -%}
+      --sab-bg: rgba(var(--color-scheme-background), 1);
+      --sab-text: rgba(var(--color-scheme-text), 1);
+      --sab-accent: currentColor;
+    {%- endif -%}
+    --sab-height: {{ section.settings.bar_height }}px;
+    --sab-font-size: {{ section.settings.font_size }}px;
+    --sab-font-weight: {{ section.settings.font_weight }};
+    --sab-text-transform: {{ section.settings.text_transform }};
+    --sab-letter-spacing: {{ section.settings.letter_spacing | times: 0.01 }}em;
+    --sab-padding-top: {{ section.settings.padding_top }}px;
+    --sab-padding-bottom: {{ section.settings.padding_bottom }}px;
+    {%- case section.settings.font_family -%}
+      {%- when 'body' -%}
+        --sab-font-family: var(--font-body-family, inherit);
+      {%- when 'heading' -%}
+        --sab-font-family: var(--font-heading-family, inherit);
+      {%- when 'accent' -%}
+        --sab-font-family: var(--font-accent-family, inherit);
+    {%- endcase -%}
+  }
+
+  #sab-{{ section.id }}.sab-wrapper {
+    {%- if section.settings.use_custom_colors -%}
+      background-color: var(--sab-bg);
+      color: var(--sab-text);
+    {%- endif -%}
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    font-family: var(--sab-font-family, inherit);
+    z-index: 10;
+    padding-top: var(--sab-padding-top);
+    padding-bottom: var(--sab-padding-bottom);
+    {%- if section.settings.show_divider -%}
+      border-bottom: {{ section.settings.divider_width }}px solid {{ section.settings.divider_color }};
+    {%- endif -%}
+  }
+
+  #sab-{{ section.id }} .sab-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--sab-height);
+    position: relative;
+    padding: 0 40px;
+  }
+
+  #sab-{{ section.id }} .sab-inner.page-width {
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+  }
+
+  #sab-{{ section.id }} .sab-slides-container {
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--sab-height);
+  }
+
+  #sab-{{ section.id }} .sab-slides {
+    display: grid;
+    width: 100%;
+    min-height: var(--sab-height);
+  }
+
+  #sab-{{ section.id }} .sab-slides .sab-slide {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--sab-height);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  #sab-{{ section.id }} .sab-slides .sab-slide--active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  {%- if section.settings.display_mode == 'static' -%}
+    #sab-{{ section.id }} .sab-slides .sab-slide {
+      opacity: 0;
+      visibility: hidden;
+    }
+    #sab-{{ section.id }} .sab-slides .sab-slide:first-child {
+      opacity: 1;
+      visibility: visible;
+    }
+  {%- endif -%}
+
+  #sab-{{ section.id }} .sab-marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    white-space: nowrap;
+    animation: sab-marquee-{{ section.id }} linear infinite;
+    animation-duration: calc(100vw / {{ section.settings.marquee_speed }}px * 1s);
+  }
+
+  @keyframes sab-marquee-{{ section.id }} {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  #sab-{{ section.id }} .sab-marquee-track .sab-slide {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 0 20px;
+  }
+
+  #sab-{{ section.id }} .sab-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  #sab-{{ section.id }} .sab-message {
+    font-size: var(--sab-font-size);
+    font-weight: var(--sab-font-weight);
+    text-transform: var(--sab-text-transform);
+    letter-spacing: var(--sab-letter-spacing);
+    color: inherit;
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  #sab-{{ section.id }} a.sab-message:hover {
+    text-decoration: underline;
+  }
+
+  #sab-{{ section.id }} .sab-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: {%- if section.settings.use_custom_colors -%}var(--sab-accent){%- else -%}currentColor{%- endif -%};
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  #sab-{{ section.id }}:hover .sab-arrow {
+    opacity: 1;
+  }
+
+  #sab-{{ section.id }} .sab-arrow:hover {
+    opacity: 1;
+  }
+
+  #sab-{{ section.id }} .sab-arrow--prev {
+    left: 12px;
+  }
+
+  #sab-{{ section.id }} .sab-arrow--next {
+    right: {%- if section.settings.show_close -%}36px{%- else -%}12px{%- endif -%};
+  }
+
+  #sab-{{ section.id }} .sab-close {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: {%- if section.settings.use_custom_colors -%}var(--sab-accent){%- else -%}currentColor{%- endif -%};
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  #sab-{{ section.id }} .sab-close:hover {
+    opacity: 1;
+  }
+
+  #sab-{{ section.id }} .sab-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: transparent;
+  }
+
+  #sab-{{ section.id }} .sab-progress__bar {
+    height: 100%;
+    width: 0;
+    background-color: {%- if section.settings.use_custom_colors -%}var(--sab-accent){%- else -%}currentColor{%- endif -%};
+    opacity: 0.5;
+    transition: width linear;
+  }
+
+  #sab-{{ section.id }} .sab-progress__bar.sab-progress--animating {
+    width: 100%;
+  }
+
+  #sab-{{ section.id }} .sab-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 0;
+  }
+
+  #sab-{{ section.id }} .sab-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: {%- if section.settings.use_custom_colors -%}var(--sab-accent){%- else -%}currentColor{%- endif -%};
+    opacity: 0.35;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  #sab-{{ section.id }} .sab-dot--active {
+    opacity: 1;
+  }
+
+  #sab-{{ section.id }}.sab-hidden {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    #sab-{{ section.id }} .sab-arrow {
+      display: none;
+    }
+    #sab-{{ section.id }} .sab-inner {
+      padding: 0 16px;
+    }
+    #sab-{{ section.id }} .sab-message {
+      font-size: calc(var(--sab-font-size) - 1px);
+    }
+  }
+</style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Store Announcement Bar",
+  "tag": "section",
+  "class": "sab-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Display Mode"
+    },
+    {
+      "type": "select",
+      "id": "display_mode",
+      "label": "Display mode",
+      "options": [
+        { "value": "slider", "label": "Slider (fade)" },
+        { "value": "marquee", "label": "Marquee (scroll)" },
+        { "value": "static", "label": "Static (first message)" }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_colors",
+      "label": "Use custom colors",
+      "default": false,
+      "info": "Override the color scheme with custom colors below"
+    },
+    {
+      "type": "color",
+      "id": "custom_bg_color",
+      "label": "Custom background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "custom_text_color",
+      "label": "Custom text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "custom_accent_color",
+      "label": "Custom accent color",
+      "default": "#ffffff",
+      "info": "Used for arrows, dots, and progress bar"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "full-width", "label": "Full width" },
+        { "value": "page-width", "label": "Page width" }
+      ],
+      "default": "full-width"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Bar height",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "default": 44,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font family",
+      "options": [
+        { "value": "body", "label": "Body" },
+        { "value": "heading", "label": "Heading" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show bottom divider",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "label": "Divider thickness",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Auto-Rotate"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto-rotate messages",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rotate_speed",
+      "label": "Rotation speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Marquee scroll speed",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "px/s",
+      "info": "Pixels per second"
+    },
+    {
+      "type": "header",
+      "content": "Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true,
+      "info": "Arrows appear on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dot indicators",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "label": "Show progress bar",
+      "default": true,
+      "info": "Thin animated bar synced to rotation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close",
+      "label": "Show dismiss button",
+      "default": false,
+      "info": "Remembers dismissal in browser"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message text",
+          "default": "Free shipping on orders over $50"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "truck", "label": "Truck (shipping)" },
+            { "value": "tag", "label": "Tag (sale)" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "star", "label": "Star" },
+            { "value": "bolt", "label": "Bolt (flash)" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "percent", "label": "Percent" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_countdown",
+          "label": "Show countdown timer",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "countdown_date",
+          "label": "Countdown end date",
+          "info": "Format: YYYY-MM-DDTHH:MM (e.g., 2025-12-31T23:59)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Announcement Bar",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free shipping on orders over $50", "icon": "truck" } },
+        { "type": "message", "settings": { "text": "40% OFF SITEWIDE - USE CODE: TAKE40", "icon": "tag" } },
+        { "type": "message", "settings": { "text": "New arrivals just dropped - Shop now", "icon": "star" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

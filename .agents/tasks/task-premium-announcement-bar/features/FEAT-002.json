@@ -1,0 +1,38 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Complete rebuild of sections/custom.liquid as a premium announcement bar with full schema, inline CSS, and HTML structure supporting slider/marquee/static modes, countdown, icons, progress bar, accessibility, and Shopify editor events",
+  "status": "in_progress",
+  "steps": [
+    "Completely rewrite sections/custom.liquid with the following structure:",
+    "1. HTML STRUCTURE: Wrap everything in {%- if section.blocks.size > 0 -%}. Main container div with id='sab-{{ section.id }}', role='region', aria-label translation, data attributes for display-mode, auto-rotate, rotate-speed, dismissed-key (localStorage key). Inner wrapper for width control (full-width vs page-width). Slide container with aria-live='polite'. For each block: slide div with {{ block.shopify_attributes }}, optional icon SVG (based on block.settings.icon select), message text/link, optional countdown (render 'announcement-countdown' snippet if block.settings.show_countdown and block.settings.countdown_date). Navigation arrows (prev/next) shown conditionally. Dot indicators shown conditionally. Progress bar element. Close/dismiss button.",
+    "2. ICONS: Include inline SVG definitions for 8 icons: truck, tag, gift, star, bolt, clock, heart, percent. Render based on block.settings.icon select value. Use a case/when in Liquid.",
+    "3. SCHEMA: Section settings must include: display_mode (select: slider/marquee/static), color_scheme (color_scheme type), use_custom_colors (checkbox, default false), custom_bg_color (color), custom_text_color (color), custom_accent_color (color), section_width (select: full-width/page-width), font_family (select: body/heading/accent), font_size (range 10-22 step 1 default 13), font_weight (select: 300-700), text_transform (select: none/uppercase/lowercase/capitalize), letter_spacing (range 0-20 step 1 default 0), bar_height (range 32-80 step 2 default 44), padding_top (range 0-30 step 2 default 0), padding_bottom (range 0-30 step 2 default 0), show_divider (checkbox default false), divider_color (color), divider_width (range 0-5 step 1 default 1), auto_rotate (checkbox default true), rotate_speed (range 2-10 step 1 default 5), show_arrows (checkbox default true), show_dots (checkbox default false), show_progress_bar (checkbox default true), show_close (checkbox default false), pause_on_hover (checkbox default true), marquee_speed (range 20-100 step 5 default 40). Block type 'message' (limit 10) with settings: text (text default 'Free shipping on orders over $50'), link (url), icon (select: none/truck/tag/gift/star/bolt/clock/heart/percent default none), show_countdown (checkbox default false), countdown_date (text with info about format 'YYYY-MM-DDTHH:MM').",
+    "4. INLINE CSS: All styles scoped to #sab-{{ section.id }}. Includes: base layout styles, fade transition for slider mode (.sab-slide with opacity transitions), marquee animation @keyframes for marquee mode, static mode (only first visible), arrow styles (opacity 0 on wrapper, opacity 1 on hover with transition), dot styles, progress bar (thin bar at bottom animating width 0-100%), close button, countdown timer styles, responsive breakpoints for mobile (hide arrows on mobile, adjust font size), divider border-bottom. Use CSS custom properties set via Liquid for colors/sizes.",
+    "5. INLINE SCRIPT: Include <script src='{{ 'premium-announcement-bar.js' | asset_url }}' defer></script> tag to load the external JS file. Also include a small inline init script that passes section config data.",
+    "6. COLOR SCHEME: If use_custom_colors is false, apply Shopify color scheme class 'color-{{ section.settings.color_scheme }}' on the wrapper and use CSS variables from the theme. If use_custom_colors is true, override with custom color CSS variables.",
+    "7. Keep section type as 'custom', name as 'Store Announcement Bar', tag as 'section', class as 'sab-section'. Include presets with 3 sample message blocks.",
+    "8. IMPORTANT RULES: All range settings must satisfy (max-min)/step <= 100. All range defaults must be valid step from min. All block root elements must have {{ block.shopify_attributes }}."
+  ],
+  "acceptance_criteria": [
+    "sections/custom.liquid exists with complete HTML structure for slider, marquee, and static modes",
+    "Schema JSON is valid and all range settings satisfy (max-min)/step <= 100",
+    "All range defaults are valid steps from their min value",
+    "Block elements include {{ block.shopify_attributes }}",
+    "CSS is scoped to #sab-{{ section.id }}",
+    "Section type remains 'custom' and name remains 'Store Announcement Bar'",
+    "Color scheme integration uses both Shopify color_scheme and custom color override with checkbox",
+    "Icons are rendered via inline SVG based on block.settings.icon",
+    "Countdown snippet is rendered conditionally",
+    "Accessibility attributes present (role, aria-label, aria-live, aria-hidden)"
+  ],
+  "verification": [
+    "python3 -c \"import json,re; content=open('/projects/sandbox/new1/sections/custom.liquid').read(); schema_match=re.search(r'\\{%\\s*schema\\s*%\\}(.+?)\\{%\\s*endschema\\s*%\\}', content, re.DOTALL); schema=json.loads(schema_match.group(1)); print('Schema valid'); assert schema['name']=='Store Announcement Bar'; print('Name correct'); assert any(b['type']=='message' for b in schema['blocks']); print('Block type correct')\"",
+    "grep -q 'block.shopify_attributes' /projects/sandbox/new1/sections/custom.liquid && echo 'shopify_attributes present'",
+    "grep -q 'aria-live' /projects/sandbox/new1/sections/custom.liquid && echo 'aria-live present'",
+    "grep -q 'color_scheme' /projects/sandbox/new1/sections/custom.liquid && echo 'color scheme present'",
+    "grep -q 'announcement-countdown' /projects/sandbox/new1/sections/custom.liquid && echo 'countdown snippet referenced'"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
