@@ -2,7 +2,7 @@
   "id": "FEAT-002",
   "type": "feat",
   "description": "Complete rebuild of sections/custom.liquid as a premium announcement bar with full schema, inline CSS, and HTML structure supporting slider/marquee/static modes, countdown, icons, progress bar, accessibility, and Shopify editor events",
-  "status": "in_progress",
+  "status": "completed",
   "steps": [
     "Completely rewrite sections/custom.liquid with the following structure:",
     "1. HTML STRUCTURE: Wrap everything in {%- if section.blocks.size > 0 -%}. Main container div with id='sab-{{ section.id }}', role='region', aria-label translation, data attributes for display-mode, auto-rotate, rotate-speed, dismissed-key (localStorage key). Inner wrapper for width control (full-width vs page-width). Slide container with aria-live='polite'. For each block: slide div with {{ block.shopify_attributes }}, optional icon SVG (based on block.settings.icon select), message text/link, optional countdown (render 'announcement-countdown' snippet if block.settings.show_countdown and block.settings.countdown_date). Navigation arrows (prev/next) shown conditionally. Dot indicators shown conditionally. Progress bar element. Close/dismiss button.",
@@ -34,5 +34,5 @@
     "grep -q 'announcement-countdown' /projects/sandbox/new1/sections/custom.liquid && echo 'countdown snippet referenced'"
   ],
   "blocked_reason": null,
-  "findings": ""
+  "findings": "File was previously untracked (part of initial zip upload). Complete rewrite with all 748 lines. All verification checks pass: schema valid, range constraints validated, block.shopify_attributes present, aria-live present, color_scheme present, countdown snippet referenced. The locales file uses JSONC format requiring comment stripping for validation."
 }
