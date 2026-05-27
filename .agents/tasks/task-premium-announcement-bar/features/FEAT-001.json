@@ -2,7 +2,7 @@
   "id": "FEAT-001",
   "type": "feat",
   "description": "Add translation keys to locales/en.default.json and create the countdown timer snippet at snippets/announcement-countdown.liquid",
-  "status": "in_progress",
+  "status": "completed",
   "steps": [
     "Read locales/en.default.json and add a new 'sections' top-level key (or add to existing) with 'premium_announcement' sub-object containing translation keys: 'days', 'hours', 'minutes', 'seconds', 'previous', 'next', 'close', 'pause', 'play', 'announcement_bar' (aria label). The file uses JSONC format (comments are allowed). Add the new keys before the closing brace of the root object.",
     "Create snippets/announcement-countdown.liquid - a Liquid snippet that receives 'end_date' as a variable and renders countdown timer markup with spans for days, hours, minutes, seconds. Use translation keys via {{ 'sections.premium_announcement.days' | t }} pattern. Include data-countdown-end attribute with ISO date string for JS to parse."
@@ -18,5 +18,5 @@
     "grep -q 'premium_announcement' /projects/sandbox/new1/locales/en.default.json && echo 'translation keys added'"
   ],
   "blocked_reason": null,
-  "findings": ""
+  "findings": "The verification command for JSON validation needs to handle multi-line comments (/* ... */) in addition to single-line comments (//). Use re.sub(r'/\\*.*?\\*/', '', content, flags=re.DOTALL) before the single-line comment removal."
 }
