@@ -1,0 +1,24 @@
+{
+  "project_type": "Shopify Theme (Horizon v3.5.1)",
+  "language": "Liquid, JavaScript, CSS, JSON",
+  "build_system": "Shopify theme - no build step required, files are used directly",
+  "test_framework": "No automated test framework - validation is via JSON schema correctness and file syntax",
+  "build_command": "No build command - validate JSON files with python3 -c and check Liquid syntax",
+  "test_command": "python3 -c \"import json; json.load(open('locales/en.default.json'))\" && python3 -c \"import json; json.load(open('sections/header-group.json'))\"",
+  "verification_instructions": "1. Validate en.default.json parses as valid JSON. 2. Validate header-group.json parses as valid JSON. 3. Check that sections/custom.liquid contains valid schema JSON block. 4. Check that assets/premium-announcement-bar.js has no syntax errors. 5. Check that snippets/announcement-countdown.liquid exists.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "No setup needed - this is a Shopify theme with static files",
+  "environment_constraints": "No build tools required. Files are Liquid templates, JS, CSS, and JSON. Validation is structural only.",
+  "contribution_requirements": "Schema range settings MUST follow (max - min) / step <= 100. Range defaults MUST be on valid step from min. Block root elements MUST have {{ block.shopify_attributes }}. CSS MUST be scoped to #sab-{{ section.id }}. Color picker never returns blank - use checkbox for custom color override. Keep section type 'custom' so header-group.json reference works. Inline <style> and <script> tags (not type=module). No hardcoded text where translation makes sense.",
+  "key_patterns": "Sections use {% schema %} JSON block at end. Sections use inline <style> and <script> for self-contained approach. The existing custom.liquid uses IIFE pattern for JS. Locales file uses JSONC (comments allowed). Header-group.json references sections by type. Blocks use {{ block.shopify_attributes }}. Snippets are rendered with {% render 'snippet-name', var: value %}. Color scheme integration uses 'color-{{ section.settings.color_scheme }}' class pattern.",
+  "relevant_files": [
+    "sections/custom.liquid",
+    "sections/header-group.json",
+    "sections/header-announcements.liquid",
+    "assets/announcement-bar.js",
+    "blocks/_announcement.liquid",
+    "locales/en.default.json",
+    "snippets/announcement-countdown.liquid"
+  ],
+  "directory_structure": "assets/ - JS, CSS, SVG files. blocks/ - reusable block .liquid files. config/ - settings_data.json, settings_schema.json. layout/ - theme.liquid, password.liquid. locales/ - translation JSON files. sections/ - section .liquid files with schemas. snippets/ - reusable snippet .liquid files."
+}
