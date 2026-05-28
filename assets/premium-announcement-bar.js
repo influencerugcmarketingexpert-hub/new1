@@ -124,7 +124,11 @@
     if (!this.marqueeTrack) return;
     var trackWidth = this.marqueeTrack.scrollWidth / 2;
     var duration = trackWidth / this.marqueeSpeed;
-    this.marqueeTrack.style.animation = 'sab-marquee ' + duration + 's linear infinite';
+    var sectionId = this.sectionId;
+    this.marqueeTrack.style.animationName = 'sab-marquee-' + sectionId;
+    this.marqueeTrack.style.animationDuration = duration + 's';
+    this.marqueeTrack.style.animationTimingFunction = 'linear';
+    this.marqueeTrack.style.animationIterationCount = 'infinite';
   };
 
   PremiumAnnouncementBar.prototype.goToSlide = function(index) {
